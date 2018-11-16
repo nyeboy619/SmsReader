@@ -33,13 +33,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main_layout);
         lv = findViewById(R.id.lv);
         Button b = findViewById(R.id.b);
-        b.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                readDatabase();
-//                insertToDatabase();
-            }
-        });
+        b.setText("Read database content");
+        Button b2 = findViewById(R.id.b2);
+        b2.setText("Copy Sms content to database");
+
 
 
 
@@ -50,7 +47,13 @@ public class MainActivity extends Activity {
 
 
     }
+    public  void copy(View v){
+        insertToDatabase();
+    }
 
+    public  void read(View v){
+        readDatabase();
+    }
     private void insertToDatabase() {
 
         Uri inboxUri = Uri.parse("content://sms/inbox");
