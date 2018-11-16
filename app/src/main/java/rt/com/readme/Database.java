@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 public class Database extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "sms";
+    private static final String DATABASE_NAME = "Student.db";
     private static final int DATABASE_VERSION = 1;
 
     private Context context;
@@ -17,18 +17,24 @@ public class Database extends SQLiteOpenHelper {
     public Database(Context context){
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
         this.context = context;
+
     }
 
 
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE MESSAGES (NUMBER INTEGER PRIMARY KEY,BODY TEXT)");
+        db.execSQL("CREATE TABLE MESSAGES (ID INTEGER PRIMARY KEY,NUMBER INTEGER,BODY TEXT )");
+//
+
+
+
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS MESSAGES");
     }
 
     public void insertMessages(String number,String body){
@@ -47,10 +53,17 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public Cursor view(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("Select * from CONTACTS",null);
+
+        Toast.makeText(context, "opening db", Toast.LENGTH_SHORT).show();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor res = db.rawQuery(" SELECT * FROM MESSAGES ",null);
+
         return res;
+
+
     }
+
+
 
 
 }
