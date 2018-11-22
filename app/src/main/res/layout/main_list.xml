@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:alpha="1">
+
+	<Button
+		android:onClick="read"
+		android:id="@+id/b"
+		android:layout_width="match_parent"
+		android:layout_gravity="center_vertical"
+		android:layout_height="wrap_content"
+		android:text="Read Database"/>
+
+	<Button
+		android:onClick="copy"
+		android:id="@+id/b2"
+		android:layout_width="match_parent"
+		android:layout_gravity="center_vertical"
+		android:layout_height="wrap_content"
+		android:text="Update Database"/>
+
+	<ListView
+		android:id="@+id/lv"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+	</ListView>
+
+</LinearLayout>
+

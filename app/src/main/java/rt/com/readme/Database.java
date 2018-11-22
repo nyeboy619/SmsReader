@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
+import java.sql.*;
 
 public class Database extends SQLiteOpenHelper {
 
@@ -36,13 +37,18 @@ public class Database extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS MESSAGES");
     }
+		SQLiteDatabase db;
 
-    public void insertMessages(String number,String body){
-        SQLiteDatabase db = this.getWritableDatabase();
+    public void insertMessages(String number,String body,String date){
+				long result = -1;
+         db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("NUMBER",number);
         cv.put("BODY",body);
-        long result = db.insert("MESSAGES",null,cv);
+				cv.put("DATE",date.toString());
+				
+        result = db.insert("MESSAGES",null,cv);
+				
         db.close();
 
         if(result==-1){
@@ -55,7 +61,7 @@ public class Database extends SQLiteOpenHelper {
     public Cursor view(){
 
         Toast.makeText(context, "opening db", Toast.LENGTH_SHORT).show();
-        SQLiteDatabase db = getWritableDatabase();
+         db = getWritableDatabase();
         Cursor res = db.rawQuery(" SELECT * FROM MESSAGES ",null);
 
         return res;

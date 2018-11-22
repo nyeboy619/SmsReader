@@ -1,81 +1,110 @@
 package rt.com.readme;
 
-import android.app.Activity;
-import android.content.ContentResolver;
-import android.database.Cursor;
-import android.net.Uri;
+import android.app.*;
+import android.content.*;
+import android.database.*;
+import android.graphics.*;
+import android.net.*;
+import android.os.*;
+import android.view.*;
+import android.webkit.*;
+import android.widget.*;
+import java.util.*;
+import android.widget.AdapterView.*;
 
-import android.os.Bundle;
-
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-
-import android.widget.Toast;
-
-import java.util.ArrayList;
 
 
 public class MainActivity extends Activity {
 
-    ListView lv;
-    private ArrayList<String> smsList;
-    Database db;
+    
+		ActionBar ab;
+		
+		WebView wv;
+		MainThread thread;
+
+		private ArrayList smsList;
+		ListView lv;
+		Database db;
+		
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+				
+				thread = new MainThread(this);
 
-        db = new Database(this);
+      
+				getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME);
+				requestWindowFeature(Window.FEATURE_ACTION_BAR);
+				
+				setContentView(R.layout.main);
+				
+				wv = findViewById(R.id.wv);
+				wv.setWebViewClient(new WebViewClient());
+				wv.loadUrl("http://www.free.facebook.com");
+				
+				
+				
+				
+				//thread.start();
 
-        setContentView(R.layout.main_layout);
-        lv = findViewById(R.id.lv);
-        Button b = findViewById(R.id.b);
-        b.setText("Read database content");
-        Button b2 = findViewById(R.id.b2);
-        b2.setText("Copy Sms content to database");
-
-
-
-
-
-
-
-
-
-
-    }
-    public  void copy(View v){
-        insertToDatabase();
-    }
-
-    public  void read(View v){
-        readDatabase();
-    }
-    private void insertToDatabase() {
-
-        Uri inboxUri = Uri.parse("content://sms/inbox");
-
-        ContentResolver cr = getContentResolver();
-
-        Cursor c = cr.query(inboxUri,null,null,null,null);
-        while(c.moveToNext()){
-            String number = c.getString(c.getColumnIndexOrThrow("address"));
-            String body = c.getString(c.getColumnIndexOrThrow("body"));
-
-            db.insertMessages(number,body);
-            Toast.makeText(this,"Inserting Data . . .", Toast.LENGTH_SHORT).show();
-        }
-
-        c.close();
-
-
+        
+        
 
     }
 
-    private void readDatabase() {
+		@Override
+		public boolean onCreateOptionsMenu(Menu menu)
+		{
+				getMenuInflater().inflate(R.menu.item,menu);
+				return true;
+		}
+
+		@Override
+		public boolean onOptionsItemSelected(MenuItem item)
+		{
+				// TODO: Implement this method
+				
+				switch(item.getItemId()){
+						case R.id.history:
+								Intent i = new Intent(this,History.class);
+								startActivity(i);
+				}
+				
+				
+				return true;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		public class MainThread extends Thread{
+				
+				MainActivity activity;
+				public MainThread(MainActivity activity){
+						
+						this.activity= activity;
+				}
+
+				@Override
+				public void run()
+				{
+						super.run();
+								Toast.makeText(activity.getApplicationContext(),"updating",Toast.LENGTH_SHORT).show();
+								
+						
+						
+				}
+				
+				
+		}
+		
+		private String readDatabase() {
+				String url= null;
 
         Cursor c = db.view();
 
@@ -85,6 +114,7 @@ public class MainActivity extends Activity {
             while (c.moveToNext()){
                 sb.append("Number : "+c.getString(1)+"\n");
                 sb.append("Message : "+c.getString(2)+"\n");
+								//smsList.add(sb.toString());
 
             }
             smsList.add(sb.toString());
@@ -94,6 +124,7 @@ public class MainActivity extends Activity {
             ArrayAdapter<String> la = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, smsList);
             lv.setAdapter(la);
         }
+				return url;
 
     }
 
