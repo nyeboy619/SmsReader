@@ -39,13 +39,13 @@ public class Database extends SQLiteOpenHelper {
     }
 		SQLiteDatabase db;
 
-    public void insertMessages(String number,String body,String date){
+    public void insertMessages(String number,String body){
 				long result = -1;
          db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("NUMBER",number);
         cv.put("BODY",body);
-				cv.put("DATE",date.toString());
+				
 				
         result = db.insert("MESSAGES",null,cv);
 				
@@ -60,10 +60,13 @@ public class Database extends SQLiteOpenHelper {
 
     public Cursor view(){
 
+				
         Toast.makeText(context, "opening db", Toast.LENGTH_SHORT).show();
          db = getWritableDatabase();
         Cursor res = db.rawQuery(" SELECT * FROM MESSAGES ",null);
 
+				Toast.makeText(context, "returning Cursor", Toast.LENGTH_SHORT).show();
+				
         return res;
 
 

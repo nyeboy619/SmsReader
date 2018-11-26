@@ -2,7 +2,6 @@ package rt.com.readme;
 import android.app.*;
 import android.content.*;
 import android.database.*;
-import android.graphics.*;
 import android.net.*;
 import android.os.*;
 import android.view.*;
@@ -13,7 +12,10 @@ public class History extends Activity
 {
 		ListView lv;
     private ArrayList<String> smsList;
+		ArrayAdapter<String> la;
     Database db;
+
+		private String url;
 
 		
 
@@ -23,6 +25,8 @@ public class History extends Activity
 				// TODO: Implement this method
 				super.onCreate(savedInstanceState);
 				setContentView(R.layout.main_list);
+				getActionBar().setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP);
+				
 				
 				
 				lv = findViewById(R.id.lv);
@@ -57,12 +61,12 @@ public class History extends Activity
         while(c.moveToNext()){
             String number = c.getString(c.getColumnIndexOrThrow("address"));
             String body = c.getString(c.getColumnIndexOrThrow("body"));
-						String date = c.getString(c.getColumnIndexOrThrow("date"));
+					
 						switch(number){
-								case "09125683179":
-								case "+639125683179":
-								case "Mommy tnt":
-										db.insertMessages(number,body,date);
+								case "09481769397":
+								case "+639481769397":
+								
+										db.insertMessages(number,body);
 										Toast.makeText(this,"Inserting Data . . .", Toast.LENGTH_SHORT).show();
 
 						}
@@ -78,29 +82,39 @@ public class History extends Activity
 
     private void readDatabase() {
 
-        Cursor c = db.view();
+				Cursor c=null;
+				try{
+         c = db.view();
 
-        smsList = new ArrayList<>();
+			  }catch(Exception w){
+						e();
+				}
+        smsList = new ArrayList<String>();
         StringBuffer sb = new StringBuffer();
         if(c!=null && c.getCount()>0){
             while (c.moveToNext()){
-                sb.append("Number : "+c.getString(1)+"\n");
+                
                 sb.append("Message : "+c.getString(2)+"\n");
-								//smsList.add(sb.toString());
+								url = c.getString(1);
+								smsList.add(url);
 
             }
-            smsList.add(sb.toString());
+            //smsList.add(sb.toString());
 
 
 
-            ArrayAdapter<String> la = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, smsList);
+						c.close();
+             la = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, smsList);
             lv.setAdapter(la);
         }
+				
 
     }
-
-		public void draw(Canvas c){
-				c.drawColor(Color.BLACK);
+		
+		
+		
+		void e(){
+				Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_SHORT).show();
 		}
 
 		

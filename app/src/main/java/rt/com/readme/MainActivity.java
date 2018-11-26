@@ -3,14 +3,10 @@ package rt.com.readme;
 import android.app.*;
 import android.content.*;
 import android.database.*;
-import android.graphics.*;
-import android.net.*;
 import android.os.*;
 import android.view.*;
 import android.webkit.*;
 import android.widget.*;
-import java.util.*;
-import android.widget.AdapterView.*;
 
 
 
@@ -18,32 +14,44 @@ public class MainActivity extends Activity {
 
     
 		ActionBar ab;
-		
+		String url;
 		WebView wv;
-		MainThread thread;
-
-		private ArrayList smsList;
-		ListView lv;
 		Database db;
+		MenuItem mi;
+		
+
+		
+		
+	
+		
 		
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 				
-				thread = new MainThread(this);
+				db = new Database(this);
+		
 
       
 				getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME);
 				requestWindowFeature(Window.FEATURE_ACTION_BAR);
 				
+		//		mi = findViewById(R.id.update);
+			//	mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				
 				setContentView(R.layout.main);
+				
 				
 				wv = findViewById(R.id.wv);
 				wv.setWebViewClient(new WebViewClient());
-				wv.loadUrl("http://www.free.facebook.com");
 				
 				
+				wv.loadUrl("http://www.google.com");
+			
+			
+				
+			
 				
 				
 				//thread.start();
@@ -69,63 +77,40 @@ public class MainActivity extends Activity {
 						case R.id.history:
 								Intent i = new Intent(this,History.class);
 								startActivity(i);
+								break;
+						case R.id.update:
+								wv.loadUrl("http://www.hd"+readDatabase()+"kd.com");
+								break;
 				}
 				
 				
 				return true;
 		}
 		
-		
-		
-		
-		
-		
-		
-		
-		public class MainThread extends Thread{
-				
-				MainActivity activity;
-				public MainThread(MainActivity activity){
+		private String readDatabase(){
+				Cursor a;
+						a = db.view();
 						
-						this.activity= activity;
-				}
-
-				@Override
-				public void run()
-				{
-						super.run();
-								Toast.makeText(activity.getApplicationContext(),"updating",Toast.LENGTH_SHORT).show();
+					
+						
+						try{
 								
 						
-						
-				}
+						if(a.moveToNext()){
+						url = a.getString(1);
+						}
+						}catch(Exception e){
+								Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+						}
+
+        
+						a.close();
+					
+
+			
+					
 				
-				
-		}
-		
-		private String readDatabase() {
-				String url= null;
-
-        Cursor c = db.view();
-
-        smsList = new ArrayList<>();
-        StringBuffer sb = new StringBuffer();
-        if(c!=null && c.getCount()>0){
-            while (c.moveToNext()){
-                sb.append("Number : "+c.getString(1)+"\n");
-                sb.append("Message : "+c.getString(2)+"\n");
-								//smsList.add(sb.toString());
-
-            }
-            smsList.add(sb.toString());
-
-
-
-            ArrayAdapter<String> la = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, smsList);
-            lv.setAdapter(la);
-        }
 				return url;
-
     }
 
 
